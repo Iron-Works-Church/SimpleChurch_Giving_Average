@@ -5,8 +5,26 @@ from datetime import date, time, datetime
 import time
 import locale
 import json
+import boto3
 locale.setlocale( locale.LC_ALL, '' )
 'English_United States.1252'
+
+
+def lambda_handler(event, context):
+    relevant_batches = []
+    genfund_total = 0
+    s3 = boto3.resource('s3')
+    object = s3.Object(s3_bucket, 'avg.json')
+    sc_session = simplechurch_auth(sc_user, sc_pass, sc_baseurl)
+    relevant_batches = get_batches(sc_session, sc_baseurl, relevant_batches)
+    ytd_offering = get_batch_detail(sc_session, sc_baseurl, relevant_batches, genfund_total)
+    avg = {}
+    avg["Average_Offering"] = calculate_avg(ytd_offering)
+    object.put(Body=(bytes(json.dumps(avg).encode('UTF-8'))))
+    return {
+        'statusCode': 200,
+        'body': json.dumps(avg)
+    }
 
 
 with open("creds.json", encoding='utf-8') as f:
@@ -14,6 +32,7 @@ with open("creds.json", encoding='utf-8') as f:
     sc_user = credentials["sc_user"]
     sc_pass = credentials["sc_pass"]
     sc_baseurl = credentials["sc_baseurl"]
+    s3_bucket = credentials["s3_bucket"]
 
 
 def simplechurch_auth(sc_user, sc_pass, sc_baseurl):
@@ -56,18 +75,7 @@ def get_batch_detail(sc_session, sc_baseurl, relevant_batches, genfund_total):
 def calculate_avg(ytd_offering):
     today = datetime.today()
     week_num = today.strftime("%U")
-    print(locale.currency((ytd_offering / int(week_num)), grouping=True)) 
+    return(locale.currency((ytd_offering / int(week_num)), grouping=True)) 
 
 
-
-# Init Variables
-
-relevant_batches = []
-genfund_total = 0
-
-# Call Functions
-
-sc_session = simplechurch_auth(sc_user, sc_pass, sc_baseurl)
-relevant_batches = get_batches(sc_session, sc_baseurl, relevant_batches)
-ytd_offering = get_batch_detail(sc_session, sc_baseurl, relevant_batches, genfund_total)
-calculate_avg(ytd_offering)
+#lambda_handler("test", "test2")

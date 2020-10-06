@@ -1,2 +1,2 @@
 # Edit the below parameters to include your username, password, and base SimpleChurch URL
-{"sc_user": "user.name", "sc_pass": "somepassword", "sc_baseurl": "https://yourchurch.simplechurchcrm.com/api/"}
+{"sc_user": "user.name", "sc_pass": "somepassword", "sc_baseurl": "https://yourchurch.simplechurchcrm.com/api/", "s3_bucket": "yourbucketname"}
