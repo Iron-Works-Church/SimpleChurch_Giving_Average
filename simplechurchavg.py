@@ -34,6 +34,7 @@ def get_batches(sc_session, sc_baseurl, relevant_batches):
         batch_date = time.mktime(datetime.strptime(batch_date, "%Y-%m-%d").timetuple())
         if batch_date > current_year_int:
             relevant_batches.append(i["id"])
+    return(relevant_batches)
 
 def get_batch_detail(sc_session, sc_baseurl, relevant_batches, genfund_total):
     today = datetime.today()
@@ -51,13 +52,22 @@ def get_batch_detail(sc_session, sc_baseurl, relevant_batches, genfund_total):
                 if transaction_date > current_year_int:
                     genfund_total = genfund_total + i2["amount"]
     return(genfund_total)
-        
 
-sc_session = simplechurch_auth(sc_user, sc_pass, sc_baseurl)
+def calculate_avg(ytd_offering):
+    today = datetime.today()
+    week_num = today.strftime("%U")
+    print(locale.currency((ytd_offering / int(week_num)), grouping=True)) 
+
+
+
+# Init Variables
+
 relevant_batches = []
 genfund_total = 0
-get_batches(sc_session, sc_baseurl, relevant_batches)
+
+# Call Functions
+
+sc_session = simplechurch_auth(sc_user, sc_pass, sc_baseurl)
+relevant_batches = get_batches(sc_session, sc_baseurl, relevant_batches)
 ytd_offering = get_batch_detail(sc_session, sc_baseurl, relevant_batches, genfund_total)
-today = datetime.today()
-week_num = today.strftime("%U")
-print(locale.currency((ytd_offering / int(week_num)), grouping=True))
+calculate_avg(ytd_offering)
