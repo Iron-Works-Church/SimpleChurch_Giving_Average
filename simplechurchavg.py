@@ -59,5 +59,5 @@ genfund_total = 0
 get_batches(sc_session, sc_baseurl, relevant_batches)
 ytd_offering = get_batch_detail(sc_session, sc_baseurl, relevant_batches, genfund_total)
 today = datetime.today()
-avg_weekly = today.strftime("%U")
-print(locale.currency((ytd_offering / int(avg_weekly)), grouping=True))
+week_num = today.strftime("%U")
+print(locale.currency((ytd_offering / int(week_num)), grouping=True))
