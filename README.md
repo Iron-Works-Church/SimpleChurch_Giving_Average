@@ -1,5 +1,5 @@
 # SimpleChurch_Giving_Average
-SimpleChurch CRM is a powerful Church Management Software suite to keep track of members, giving, and attednance.  This script will calculate the weekly average giving in the general fund (fund id: 1) for calendar year to date.  It has been written be run on an AWS Lambda Function in Python 3.8 and is configured to write the output to an AWS S3 bucket as "avg.json".  
+SimpleChurch CRM is a powerful Church Management Software suite to keep track of members, giving, and attedance.  This script will calculate the weekly average giving in the general fund (fund id: 1) for calendar year to date.  It has been written be run on an AWS Lambda Function in Python 3.8 and is configured to write the output to an AWS S3 bucket as "avg.json".  
 
 Our church uses a Google Sheet with the ImportJSON() function to dynamically update our financial stats from this data.
 
